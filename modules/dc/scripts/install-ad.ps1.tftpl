@@ -1,0 +1,34 @@
+$ErrorActionPreference = "Stop"
+Start-Transcript C:\Windows\Temp\install-ad.log -Append -Force
+try {
+    Write-Host "[$(Get-Date -Format HH:mm:ss)] Starting"
+
+    # Install AD + DNS with retry
+    for ($i = 1; $i -le 5; $i++) {
+        try {
+            Install-WindowsFeature AD-Domain-Services, DNS, RSAT-AD-Tools `
+                -IncludeManagementTools -EA Stop
+            Write-Host "Feature install OK on attempt $i"
+            break
+        } catch {
+            Write-Host "Attempt $i failed: $_"
+            if ($i -eq 5) { throw }
+            Start-Sleep 30
+        }
+    }
+
+    # Decode password and promote
+    $pwd = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String("${safe_mode_password_b64}"))
+    $sec = ConvertTo-SecureString $pwd -AsPlainText -Force
+
+    Write-Host "Promoting to DC for ${domain_name}"
+    Install-ADDSForest -DomainName "${domain_name}" -DomainNetbiosName "${netbios_name}" `
+        -SafeModeAdministratorPassword $sec -InstallDns -Force -NoRebootOnCompletion:$false
+
+    Write-Host "Promotion triggered, rebooting"
+} catch {
+    Write-Error "FAILED: $_"
+    Stop-Transcript
+    exit 1
+}
+Stop-Transcript

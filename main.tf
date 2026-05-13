@@ -56,11 +56,7 @@ module "domain_controller" {
   domain_name        = var.domain_name
   safe_mode_password = random_password.dc_safe_mode.result
 
-  install_script = templatefile("${path.module}/scripts/install-ad.ps1.tftpl", {
-    domain_name            = var.domain_name
-    netbios_name           = upper(split(".", var.domain_name)[0])
-    safe_mode_password_b64 = base64encode(random_password.dc_safe_mode.result)
-  })
+  # install_script line REMOVED - module handles its own template
 
   auto_shutdown_time     = var.auto_shutdown_time
   auto_shutdown_timezone = var.auto_shutdown_timezone

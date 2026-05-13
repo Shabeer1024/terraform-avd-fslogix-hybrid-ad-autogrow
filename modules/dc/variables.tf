@@ -65,12 +65,6 @@ variable "safe_mode_password" {
   sensitive   = true
 }
 
-variable "install_script" {
-  description = "Rendered PowerShell script for AD DS install"
-  type        = string
-  sensitive   = true
-}
-
 variable "auto_shutdown_time" {
   description = "Daily auto-shutdown time HHMM"
   type        = string

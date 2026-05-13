@@ -1,3 +1,11 @@
+locals {
+  install_script = templatefile("${path.module}/scripts/install-ad.ps1.tftpl", {
+    domain_name            = var.domain_name
+    netbios_name           = upper(split(".", var.domain_name)[0])
+    safe_mode_password_b64 = base64encode(var.safe_mode_password)
+  })
+}
+
 resource "azurerm_public_ip" "dc" {
   name                = "pip-${var.vm_name}"
   location            = var.location
@@ -56,7 +64,7 @@ resource "azurerm_virtual_machine_extension" "install_ad" {
   auto_upgrade_minor_version = true
 
   protected_settings = jsonencode({
-    script = base64encode(var.install_script)
+    commandToExecute = "powershell.exe -ExecutionPolicy Unrestricted -EncodedCommand ${textencodebase64(local.install_script, "UTF-16LE")}"
   })
 
   timeouts {
