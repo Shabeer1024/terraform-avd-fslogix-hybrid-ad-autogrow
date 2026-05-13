@@ -17,3 +17,14 @@ subnets = {
 
 nsg_name        = "nsg-avd-lab"
 admin_source_ip = "49.206.133.67"
+
+
+ 
+# Step 3 - Domain Controller (added by apply-step3.ps1)
+dc_vm_name             = "dc01"
+dc_vm_size             = "Standard_B2s"
+dc_admin_username      = "labadmin"
+dc_private_ip          = "10.0.1.4"
+domain_name            = "lab.local"
+auto_shutdown_time     = "2300"
+auto_shutdown_timezone = "India Standard Time"

@@ -43,3 +43,44 @@ variable "admin_source_ip" {
     error_message = "admin_source_ip must be an IPv4 address or CIDR (e.g. '1.2.3.4' or '1.2.3.4/32')."
   }
 }
+variable "dc_vm_name" {
+  description = "Name of the DC VM (<=15 chars)"
+  type        = string
+  default     = "dc01"
+}
+
+variable "dc_vm_size" {
+  description = "DC VM SKU"
+  type        = string
+  default     = "Standard_B2s"
+}
+
+variable "dc_admin_username" {
+  description = "Local administrator username on the DC"
+  type        = string
+  default     = "labadmin"
+}
+
+variable "dc_private_ip" {
+  description = "Static private IP for the DC"
+  type        = string
+  default     = "10.0.1.4"
+}
+
+variable "domain_name" {
+  description = "AD DS domain name to create"
+  type        = string
+  default     = "lab.local"
+}
+
+variable "auto_shutdown_time" {
+  description = "Daily VM auto-shutdown time HHMM"
+  type        = string
+  default     = "2300"
+}
+
+variable "auto_shutdown_timezone" {
+  description = "Windows timezone ID"
+  type        = string
+  default     = "India Standard Time"
+}

@@ -1,0 +1,50 @@
+@'
+$ErrorActionPreference = "Stop"
+$logFile = "C:\Windows\Temp\install-ad.log"
+Start-Transcript -Path $logFile -Append
+
+try {
+    $marker = "C:\Windows\Temp\ad-installed.marker"
+    if (Test-Path $marker) {
+        Write-Host "AD DS already installed. Exiting."
+        Stop-Transcript
+        exit 0
+    }
+
+    $domainName     = "${domain_name}"
+    $netbiosName    = "${netbios_name}"
+    $safeModePwdRaw = "${safe_mode_password}"
+
+    Write-Host "Installing AD-Domain-Services + DNS features..."
+    Install-WindowsFeature -Name AD-Domain-Services, DNS, RSAT-AD-Tools `
+        -IncludeManagementTools -ErrorAction Stop
+
+    Import-Module ADDSDeployment
+    $securePwd = ConvertTo-SecureString -String $safeModePwdRaw -AsPlainText -Force
+
+    Write-Host "Promoting to DC, creating forest $domainName..."
+    Install-ADDSForest `
+        -DomainName $domainName `
+        -DomainNetbiosName $netbiosName `
+        -ForestMode "WinThreshold" `
+        -DomainMode "WinThreshold" `
+        -InstallDns:$true `
+        -CreateDnsDelegation:$false `
+        -DatabasePath "C:\Windows\NTDS" `
+        -LogPath "C:\Windows\NTDS" `
+        -SysvolPath "C:\Windows\SYSVOL" `
+        -SafeModeAdministratorPassword $securePwd `
+        -NoRebootOnCompletion:$false `
+        -Force:$true
+
+    New-Item -Path $marker -ItemType File -Force | Out-Null
+    Stop-Transcript
+    exit 0
+}
+catch {
+    Write-Error "AD DS installation failed: $_"
+    Stop-Transcript
+    exit 1
+}
+'@ | Set-Content -Path scripts/install-ad.ps1.tftpl
+Write-Host "[OK] Created scripts/install-ad.ps1.tftpl" -ForegroundColor Green
