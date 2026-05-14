@@ -64,3 +64,13 @@ module "domain_controller" {
 
   depends_on = [module.networking]
 }
+
+module "avd_core" {
+  source = "./modules/avd-core"
+
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  tags                = var.tags
+
+  depends_on = [module.resource_group]
+}

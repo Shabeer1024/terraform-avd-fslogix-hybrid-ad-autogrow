@@ -27,3 +27,21 @@ output "dc_admin_password" {
 output "dc_domain_name" {
   value = module.domain_controller.domain_name
 }
+
+output "avd_workspace_name" {
+  value = module.avd_core.workspace_name
+}
+
+output "avd_host_pool_name" {
+  value = module.avd_core.host_pool_name
+}
+
+output "avd_app_group_name" {
+  value = module.avd_core.app_group_name
+}
+
+output "avd_registration_token" {
+  description = "Used by session hosts to register with the pool. Sensitive."
+  value       = module.avd_core.registration_token
+  sensitive   = true
+}
