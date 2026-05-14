@@ -74,3 +74,29 @@ module "avd_core" {
 
   depends_on = [module.resource_group]
 }
+
+module "session_host" {
+  source = "./modules/session-host"
+
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  subnet_id           = module.networking.subnet_ids["avd"]
+
+  vm_name        = var.sh_vm_name
+  vm_size        = var.sh_vm_size
+  admin_username = var.dc_admin_username
+  admin_password = random_password.dc_admin.result
+
+  domain_name           = var.domain_name
+  domain_admin_user     = "${var.dc_admin_username}@${var.domain_name}"
+  domain_admin_password = random_password.dc_admin.result
+
+  host_pool_name     = module.avd_core.host_pool_name
+  registration_token = module.avd_core.registration_token
+
+  auto_shutdown_time     = var.auto_shutdown_time
+  auto_shutdown_timezone = var.auto_shutdown_timezone
+  tags                   = var.tags
+
+  depends_on = [module.domain_controller, module.avd_core]
+}

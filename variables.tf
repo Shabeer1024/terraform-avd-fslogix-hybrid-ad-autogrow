@@ -84,3 +84,15 @@ variable "auto_shutdown_timezone" {
   type        = string
   default     = "India Standard Time"
 }
+
+variable "sh_vm_name" {
+  description = "Session host VM name"
+  type        = string
+  default     = "sh01"
+}
+
+variable "sh_vm_size" {
+  description = "Session host VM SKU"
+  type        = string
+  default     = "Standard_B2s"
+}

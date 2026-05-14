@@ -45,3 +45,11 @@ output "avd_registration_token" {
   value       = module.avd_core.registration_token
   sensitive   = true
 }
+
+output "session_host_name" {
+  value = module.session_host.vm_name
+}
+
+output "session_host_private_ip" {
+  value = module.session_host.private_ip_address
+}
