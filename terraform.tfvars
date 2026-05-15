@@ -28,3 +28,6 @@ dc_private_ip          = "10.0.1.4"
 domain_name            = "lab.local"
 auto_shutdown_time     = "2300"
 auto_shutdown_timezone = "India Standard Time"
+
+
+fslogix_storage_account_name = "stfslogixshabeer042"  

@@ -96,3 +96,16 @@ variable "sh_vm_size" {
   type        = string
   default     = "Standard_B2s"
 }
+
+variable "fslogix_storage_account_name" {
+  description = "Globally unique, lowercase, 3-24 chars"
+  type        = string
+}
+variable "fslogix_share_quota_gb" {
+  type    = number
+  default = 100
+}
+variable "fslogix_initial_size_mb" {
+  type    = number
+  default = 10240
+}

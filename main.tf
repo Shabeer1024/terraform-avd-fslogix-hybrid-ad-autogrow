@@ -100,3 +100,18 @@ module "session_host" {
 
   depends_on = [module.domain_controller, module.avd_core]
 }
+
+module "fslogix_storage" {
+  source = "./modules/fslogix-storage"
+
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  storage_account_name     = var.fslogix_storage_account_name
+  share_quota_gb           = var.fslogix_share_quota_gb
+  fslogix_initial_size_mb  = var.fslogix_initial_size_mb
+  session_host_vm_id       = module.session_host.vm_id
+  session_host_vm_name     = module.session_host.vm_name
+  tags                     = var.tags
+
+  depends_on = [module.session_host]
+}
