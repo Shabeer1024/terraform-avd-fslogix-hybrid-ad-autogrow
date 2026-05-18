@@ -85,3 +85,33 @@ resource "azurerm_virtual_machine_extension" "hybrid_worker" {
     create = "30m"
   }
 }
+# =============================================================================
+# Phase 3 - FSLogix Auto-Grow Runbook + Webhook
+# =============================================================================
+resource "azurerm_automation_runbook" "fslogix_autogrow" {
+  name                    = "FSLogix-AutoGrow"
+  location                = var.location
+  resource_group_name     = var.resource_group_name
+  automation_account_name = azurerm_automation_account.this.name
+  log_verbose             = true
+  log_progress            = true
+  description             = "Auto-grows FSLogix profile VHDXes when usage exceeds 80%"
+  runbook_type            = "PowerShell"
+
+  content = file("${path.module}/scripts/fslogix-autogrow.ps1")
+}
+
+resource "azurerm_automation_webhook" "fslogix_autogrow_trigger" {
+  name                    = "FSLogix-AutoGrow-Trigger"
+  resource_group_name     = var.resource_group_name
+  automation_account_name = azurerm_automation_account.this.name
+  expiry_time             = timeadd(timestamp(), "8760h")
+  enabled                 = true
+  runbook_name            = azurerm_automation_runbook.fslogix_autogrow.name
+
+  run_on_worker_group     = azurerm_automation_hybrid_runbook_worker_group.this.name
+
+  lifecycle {
+    ignore_changes = [expiry_time]
+  }
+}

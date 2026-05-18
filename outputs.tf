@@ -67,3 +67,12 @@ output "automation_account_name" {
 output "hybrid_worker_group_name" {
   value = module.fslogix_automation.hybrid_worker_group_name
 }
+
+output "runbook_name" {
+  value = module.fslogix_automation.runbook_name
+}
+
+output "webhook_uri" {
+  value     = module.fslogix_automation.webhook_uri
+  sensitive = true
+}

@@ -17,3 +17,13 @@ output "hybrid_worker_group_name" {
 output "hybrid_service_url" {
   value = azurerm_automation_account.this.hybrid_service_url
 }
+
+output "runbook_name" {
+  value = azurerm_automation_runbook.fslogix_autogrow.name
+}
+
+output "webhook_uri" {
+  description = "Webhook URL used by Phase 4 Logic App to trigger the runbook"
+  value       = azurerm_automation_webhook.fslogix_autogrow_trigger.uri
+  sensitive   = true
+}
