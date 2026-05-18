@@ -38,6 +38,7 @@ try {
     Set-ItemProperty -Path $regBase -Name "VolumeType"                           -Value "VHDX"             -Type String
     Set-ItemProperty -Path $regBase -Name "FlipFlopProfileDirectoryName"         -Value 1                  -Type DWord
     Set-ItemProperty -Path $regBase -Name "DeleteLocalProfileWhenVHDShouldApply" -Value 1                  -Type DWord
+    Set-ItemProperty -Path $regBase -Name "AccessNetworkAsComputerObject"       -Value 1                  -Type DWord
 
     Write-Host "[$(Get-Date -Format HH:mm:ss)] FSLogix setup complete"
     Stop-Transcript
