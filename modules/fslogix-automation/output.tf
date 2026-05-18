@@ -27,3 +27,11 @@ output "webhook_uri" {
   value       = azurerm_automation_webhook.fslogix_autogrow_trigger.uri
   sensitive   = true
 }
+
+output "logic_app_name" {
+  value = azurerm_logic_app_workflow.fslogix_scheduler.name
+}
+
+output "logic_app_id" {
+  value = azurerm_logic_app_workflow.fslogix_scheduler.id
+}

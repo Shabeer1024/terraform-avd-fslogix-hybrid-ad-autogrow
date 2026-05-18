@@ -76,3 +76,7 @@ output "webhook_uri" {
   value     = module.fslogix_automation.webhook_uri
   sensitive = true
 }
+
+output "fslogix_logic_app_name" {
+  value = module.fslogix_automation.logic_app_name
+}

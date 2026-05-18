@@ -115,3 +115,29 @@ resource "azurerm_automation_webhook" "fslogix_autogrow_trigger" {
     ignore_changes = [expiry_time]
   }
 }
+
+# =============================================================================
+# Phase 4 - Logic App Scheduler
+# =============================================================================
+resource "azurerm_logic_app_workflow" "fslogix_scheduler" {
+  name                = "lapp-fslogix-autogrow"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tags                = var.tags
+}
+
+resource "azurerm_logic_app_trigger_recurrence" "hourly" {
+  name         = "hourly-trigger"
+  logic_app_id = azurerm_logic_app_workflow.fslogix_scheduler.id
+  frequency    = "Hour"
+  interval     = 1
+}
+
+resource "azurerm_logic_app_action_http" "call_runbook_webhook" {
+  name         = "Call-Runbook-Webhook"
+  logic_app_id = azurerm_logic_app_workflow.fslogix_scheduler.id
+  method       = "POST"
+  uri          = azurerm_automation_webhook.fslogix_autogrow_trigger.uri
+
+  depends_on = [azurerm_logic_app_trigger_recurrence.hourly]
+}
