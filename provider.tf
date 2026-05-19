@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "d2click"
     workspaces {
-      name = "Domain_Controller"
+      name = "avd-fslogix-autogrow-lab"
     }
   }
 
