@@ -4,7 +4,7 @@ Start-Transcript "C:\Windows\Temp\install-ad.log" -Append -Force
 try {
     Write-Host "===== AD-DS Installation Starting ====="
 
-    # Install features ONE AT A TIME (multi-feature array can hit 0x80070057)
+    # Install features ONE AT A TIME (multi-feature array hits 0x80070057 intermittently)
     $features = @("AD-Domain-Services", "DNS", "RSAT-AD-Tools")
     foreach ($feature in $features) {
         for ($i = 1; $i -le 5; $i++) {
@@ -19,22 +19,25 @@ try {
             }
         }
     }
-    Write-Host "All features installed"
+    Write-Host "All AD features installed"
 
-    # Check if domain already promoted (idempotency for re-runs)
-    $domainController = $false
+    $isAlreadyDC = $false
     try {
-        $domainController = (Get-WmiObject Win32_ComputerSystem).DomainRole -ge 4
+        $isAlreadyDC = (Get-WmiObject Win32_ComputerSystem).DomainRole -ge 4
     } catch {}
 
-    if ($domainController) {
+    if ($isAlreadyDC) {
         Write-Host "DC is already promoted, skipping ADDSForest install"
     } else {
         Write-Host "===== Promoting to Domain Controller ====="
-        $securePwd = ConvertTo-SecureString "${dsrm_password}" -AsPlainText -Force
+
+        $pwdBytes  = [Convert]::FromBase64String("${safe_mode_password_b64}")
+        $pwdString = [Text.Encoding]::UTF8.GetString($pwdBytes)
+        $securePwd = ConvertTo-SecureString $pwdString -AsPlainText -Force
+
         Install-ADDSForest `
             -DomainName "${domain_name}" `
-            -DomainNetbiosName "${domain_netbios}" `
+            -DomainNetbiosName "${netbios_name}" `
             -SafeModeAdministratorPassword $securePwd `
             -InstallDns:$true `
             -NoRebootOnCompletion:$false `
