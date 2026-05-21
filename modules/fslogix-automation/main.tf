@@ -82,7 +82,7 @@ resource "azurerm_virtual_machine_extension" "hybrid_worker" {
   }
 }
 # =============================================================================
-# Phase 3 - FSLogix Auto-Grow Runbook + Webhook
+# FSLogix Auto-Grow Runbook + Webhook
 # =============================================================================
 resource "azurerm_automation_runbook" "fslogix_autogrow" {
   name                    = "FSLogix-AutoGrow"
@@ -113,7 +113,7 @@ resource "azurerm_automation_webhook" "fslogix_autogrow_trigger" {
 }
 
 # =============================================================================
-# Phase 4 - Logic App Scheduler
+# Logic App Scheduler
 # =============================================================================
 resource "azurerm_logic_app_workflow" "fslogix_scheduler" {
   name                = "lapp-fslogix-autogrow"

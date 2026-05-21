@@ -1,9 +1,4 @@
-# =============================================================================
-# AVD Session Host Module
-# =============================================================================
-# Creates: NIC, Windows 11 multi-session VM, domain-join extension, AVD-agent
-# DSC extension, auto-shutdown schedule.
-# =============================================================================
+
 
 resource "azurerm_network_interface" "sh" {
   name                = "nic-${var.vm_name}"

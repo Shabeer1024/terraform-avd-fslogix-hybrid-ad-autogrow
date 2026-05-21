@@ -20,7 +20,7 @@ nsg_name        = "nsg-avd-lab"
 
 
 
-# Step 3 - Domain Controller (added by apply-step3.ps1)
+
 dc_vm_name             = "dc01"
 dc_vm_size             = "Standard_B2s"
 dc_admin_username      = "labadmin"

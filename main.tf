@@ -64,9 +64,7 @@ module "domain_controller" {
 
 
 
-# ============================================================================
-# Wait for AD-DS to finish promoting and DNS service to be reachable
-# ============================================================================
+
 resource "time_sleep" "wait_for_dc_dns" {
   depends_on = [
     module.domain_controller

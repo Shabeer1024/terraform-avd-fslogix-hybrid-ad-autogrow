@@ -1,7 +1,4 @@
 
-# =============================================================================
-# Step 3 - Domain Controller (added by apply-step3.ps1)
-# =============================================================================
 output "dc_vm_name" {
   value = module.domain_controller.vm_name
 }
