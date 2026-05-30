@@ -15,16 +15,8 @@ terraform {
       version = "~> 0.11"
     }
   }
-
-  cloud {
-    organization = "d2click"
-    workspaces {
-      name = "AVD-Fslogix-Hybrid-ADDC"
-    }
-  }
 }
 
 provider "azurerm" {
   features {}
 }
-
