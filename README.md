@@ -1,4 +1,4 @@
-# AVD + FSLogix + Hybrid Azure AD Join — Phase 1 & 2
+# AVD + FSLogix + Hybrid Azure AD Join 
 
 > Fully automated Azure Virtual Desktop lab with FSLogix profile containers, AD DS authentication for Azure Files, and Hybrid Azure AD Join. Zero manual steps — everything deployed via Terraform and PowerShell Run Commands.
 
@@ -274,7 +274,7 @@ terraform apply
 
 ---
 
-## AVD Identity Models — Three Phases
+## AVD Identity Models 
 
 | Phase | Model | DC Required | Entra Connect | Azure Files Auth | Repo |
 |-------|-------|-------------|---------------|-----------------|------|

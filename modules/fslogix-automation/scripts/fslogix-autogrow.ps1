@@ -101,6 +101,22 @@ try {
                             $action.NewSizeGB = $newSizeGB
                             $totalLogicalGB += $IncrementGB
                             Write-Output "RESIZED: $($vhdx.Name) from $($action.CurrentSizeGB) GB to $newSizeGB GB"
+
+                            # Sync FSLogix registry quota to match the new physical VHDX size.
+                            # Without this, FSLogix reads SizeInMBs and caps the user's session
+                            # at the old quota even though the VHDX is now larger.
+                            $newSizeMB  = [int]($newSizeGB * 1024)
+                            $regPath    = "HKLM:\SOFTWARE\FSLogix\Profiles"
+                            try {
+                                $currentMB = (Get-ItemProperty -Path $regPath -Name SizeInMBs -ErrorAction Stop).SizeInMBs
+                            } catch { $currentMB = 0 }
+
+                            if ($newSizeMB -gt $currentMB) {
+                                if (-not (Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+                                Set-ItemProperty -Path $regPath -Name "SizeInMBs" -Value $newSizeMB -Type DWord -ErrorAction Stop
+                                $action.RegistryUpdatedMB = $newSizeMB
+                                Write-Output "REGISTRY: SizeInMBs updated $currentMB MB → $newSizeMB MB"
+                            }
                         }
                     } else {
                         $action.Status = "Healthy"
